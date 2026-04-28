@@ -7,10 +7,10 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f4f6fb;min-height:100vh;padding:2rem 1rem;color:#111}
-.container{max-width:660px;margin:0 auto}
+.container{max-width:620px;margin:0 auto}
 .header{text-align:center;margin-bottom:2rem}
 .icon{width:52px;height:52px;background:#1a56db;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px}
-.icon svg{width:30px;height:30px;fill:white}
+.icon svg{width:28px;height:28px;fill:white}
 h1{font-size:22px;font-weight:700;margin-bottom:4px}
 .sub{font-size:14px;color:#6b7280}
 .card{background:white;border-radius:14px;border:1px solid #e5e7eb;padding:1.5rem;margin-bottom:1rem}
@@ -19,28 +19,23 @@ label{display:block;font-size:13px;font-weight:500;color:#374151;margin-bottom:4
 input,select{width:100%;padding:9px 12px;border:1.5px solid #e5e7eb;border-radius:8px;font-size:14px;color:#111;margin-bottom:12px;outline:none;transition:border .15s}
 input:focus,select:focus{border-color:#1a56db;box-shadow:0 0 0 3px rgba(26,86,219,.1)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.btn{width:100%;padding:11px;font-size:15px;font-weight:600;background:#1a56db;color:white;border:none;border-radius:9px;cursor:pointer;transition:background .15s;margin-top:4px}
+.btn{width:100%;padding:12px;font-size:15px;font-weight:700;background:#1a56db;color:white;border:none;border-radius:9px;cursor:pointer;margin-top:4px}
 .btn:hover{background:#1e40af}
 .btn:disabled{background:#9ca3af;cursor:not-allowed}
-.btn-outline{background:white;color:#1a56db;border:1.5px solid #1a56db;margin-top:8px}
-.btn-outline:hover{background:#eff6ff}
-.status{margin-top:12px;padding:12px 16px;border-radius:9px;font-size:13px;line-height:1.6;display:none}
+.status{margin-top:12px;padding:14px 16px;border-radius:9px;font-size:14px;line-height:1.6;display:none}
 .status.info{background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;display:block}
 .status.success{background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;display:block}
 .status.error{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;display:block}
-.step-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
-.num{width:24px;height:24px;background:#1a56db;color:white;border-radius:50%;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-.step-row p{font-size:13px;color:#374151;line-height:1.5}
-.step-row a{color:#1a56db}
-.badge{display:inline-block;background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
 .note{font-size:12px;color:#9ca3af;margin-top:-8px;margin-bottom:12px}
-.tab-bar{display:flex;gap:4px;margin-bottom:1.5rem}
-.tab{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid #e5e7eb;background:white;color:#6b7280;transition:.15s}
-.tab.active{background:#1a56db;color:white;border-color:#1a56db}
-.page{display:none}
-.page.active{display:block}
+.note a{color:#1a56db}
+.preview{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:14px;margin-top:12px;font-size:13px;line-height:1.7;max-height:220px;overflow-y:auto;display:none}
+.steps{margin-top:0}
+.step{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start}
+.num{width:22px;height:22px;background:#1a56db;color:white;border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.step p{font-size:13px;color:#374151;line-height:1.5}
 .history-item{padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:8px;font-size:13px;display:flex;justify-content:space-between;align-items:center}
-.ts{color:#9ca3af;font-size:12px}
+.history-item a{color:#1a56db;font-size:12px;font-weight:600;text-decoration:none}
+.ts{color:#9ca3af;font-size:11px}
 </style>
 </head>
 <body>
@@ -48,384 +43,198 @@ input:focus,select:focus{border-color:#1a56db;box-shadow:0 0 0 3px rgba(26,86,21
   <div class="header">
     <div class="icon"><svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
     <h1>WP Page Generator</h1>
-    <p class="sub">Auto-generate SEO pages for growthhappen.com</p>
+    <p class="sub">Auto-generate &amp; publish SEO pages on growthhappen.com</p>
   </div>
 
-  <div class="tab-bar">
-    <button class="tab active" onclick="switchTab('setup')">Setup</button>
-    <button class="tab" onclick="switchTab('create')">Create page</button>
-    <button class="tab" onclick="switchTab('history')">History</button>
+  <div class="card">
+    <div class="card-title">Gemini API key (free — one time setup)</div>
+    <label>Gemini API Key</label>
+    <input type="password" id="geminiKey" placeholder="AIzaSy-xxxxxxxxxxxxxxxxxxxx" oninput="saveKey()"/>
+    <p class="note">Get free: <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Sign in with Google → Get API Key → Create API Key → Copy</p>
   </div>
 
-  <!-- SETUP TAB -->
-  <div class="page active" id="tab-setup">
-    <div class="card">
-      <div class="card-title">Step 1 — GitHub credentials</div>
-      <label>GitHub username</label>
-      <input type="text" id="ghUser" placeholder="your-github-username" oninput="save()"/>
-      <label>Repository name</label>
-      <input type="text" id="ghRepo" placeholder="wp-page-generator" oninput="save()"/>
-      <label>GitHub Personal Access Token</label>
-      <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" oninput="save()"/>
-      <p class="note">Get one at: <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a> → Generate new token (classic) → check <strong>repo</strong> + <strong>workflow</strong></p>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Step 2 — WordPress credentials</div>
-      <div class="row">
-        <div>
-          <label>WP Username</label>
-          <input type="text" id="wpUser" placeholder="Growth123" oninput="save()"/>
-        </div>
-        <div>
-          <label>WP Password</label>
-          <input type="password" id="wpPass" placeholder="your password" oninput="save()"/>
-        </div>
+  <div class="card">
+    <div class="card-title">WordPress login</div>
+    <div class="row">
+      <div>
+        <label>WP Username</label>
+        <input type="text" id="wpUser" value="Growth123" oninput="saveKey()"/>
       </div>
-      <label>WordPress Site URL</label>
-      <input type="text" id="wpUrl" value="https://growthhappen.com" oninput="save()"/>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Step 3 — Gemini API key (Free)</div>
-      <label>Gemini API Key</label>
-      <input type="password" id="anthKey" placeholder="AIzaSy-xxxxxxxxxxxxxxxxxxxx" oninput="save()"/>
-      <p class="note">Get free at: <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Sign in with Google → Get API Key → Create API Key</p>
-    </div>
-
-    <button class="btn" onclick="setupRepo()">Setup repository automatically</button>
-    <div class="status" id="setup-status"></div>
-
-    <div class="card" style="margin-top:1rem">
-      <div class="card-title">How it works</div>
-      <div class="step-row"><div class="num">1</div><p>Fill in credentials above and click Setup — this automatically creates the workflow file in your GitHub repo</p></div>
-      <div class="step-row"><div class="num">2</div><p>Enable GitHub Pages: repo → Settings → Pages → main branch → Save</p></div>
-      <div class="step-row"><div class="num">3</div><p>Go to "Create page" tab — fill details and click generate</p></div>
-      <div class="step-row"><div class="num">4</div><p>GitHub Actions runs the AI + publishes to WordPress automatically — no CORS issues!</p></div>
-    </div>
-  </div>
-
-  <!-- CREATE PAGE TAB -->
-  <div class="page" id="tab-create">
-    <div class="card">
-      <div class="card-title">Page details</div>
-      <label>Page title</label>
-      <input type="text" id="pageTitle" placeholder="e.g. Google Ads for Packers and Movers in Delhi"/>
-      <div class="row">
-        <div>
-          <label>Service type</label>
-          <select id="service">
-            <option>Google Ads</option>
-            <option>Facebook Ads</option>
-            <option>Instagram Ads</option>
-            <option>LinkedIn Ads</option>
-            <option>Meta Ads</option>
-            <option>SEO Service</option>
-            <option>Social Media Marketing</option>
-          </select>
-        </div>
-        <div>
-          <label>Target city</label>
-          <input type="text" id="city" placeholder="e.g. Delhi, Gurgaon"/>
-        </div>
+      <div>
+        <label>WP Password</label>
+        <input type="password" id="wpPass" oninput="saveKey()"/>
       </div>
-      <label>Target industry</label>
-      <input type="text" id="industry" placeholder="e.g. Packers and Movers, Restaurants, Real Estate"/>
-      <label>Keywords (comma separated)</label>
-      <input type="text" id="keywords" placeholder="e.g. affordable ads, lead generation"/>
-      <label>Publish as</label>
-      <select id="publishStatus">
-        <option value="publish">Published (live)</option>
-        <option value="draft">Draft</option>
-      </select>
-      <button class="btn" id="createBtn" onclick="createPage()">Generate &amp; publish page</button>
-      <div class="status" id="create-status"></div>
     </div>
   </div>
 
-  <!-- HISTORY TAB -->
-  <div class="page" id="tab-history">
-    <div class="card">
-      <div class="card-title">Recently created pages</div>
-      <div id="historyList"><p style="font-size:14px;color:#9ca3af">No pages created yet.</p></div>
+  <div class="card">
+    <div class="card-title">Page details</div>
+    <label>Page title</label>
+    <input type="text" id="pageTitle" placeholder="e.g. Google Ads for Packers and Movers in Delhi"/>
+    <div class="row">
+      <div>
+        <label>Service</label>
+        <select id="service">
+          <option>Google Ads</option>
+          <option>Facebook Ads</option>
+          <option>Instagram Ads</option>
+          <option>LinkedIn Ads</option>
+          <option>Meta Ads</option>
+          <option>SEO Service</option>
+          <option>Social Media Marketing</option>
+        </select>
+      </div>
+      <div>
+        <label>Target city</label>
+        <input type="text" id="city" placeholder="e.g. Delhi, Gurgaon"/>
+      </div>
+    </div>
+    <label>Target industry</label>
+    <input type="text" id="industry" placeholder="e.g. Packers and Movers, Restaurants"/>
+    <label>Keywords (comma separated)</label>
+    <input type="text" id="keywords" placeholder="e.g. affordable ads, lead generation"/>
+    <label>Publish as</label>
+    <select id="pubStatus">
+      <option value="publish">Published (live)</option>
+      <option value="draft">Draft</option>
+    </select>
+    <button class="btn" id="genBtn" onclick="generate()">Generate &amp; publish page</button>
+    <div class="status" id="statusBox"></div>
+    <div class="preview" id="previewBox"></div>
+  </div>
+
+  <div class="card" id="historyCard" style="display:none">
+    <div class="card-title">Pages created</div>
+    <div id="historyList"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">How this works</div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><p>Fill your Gemini API key once — it's saved in your browser</p></div>
+      <div class="step"><div class="num">2</div><p>Fill page details and click Generate</p></div>
+      <div class="step"><div class="num">3</div><p>Gemini AI writes the full SEO page content</p></div>
+      <div class="step"><div class="num">4</div><p>Page is published live on growthhappen.com instantly</p></div>
     </div>
   </div>
 </div>
 
 <script>
-const WORKFLOW_CONTENT = `name: Create WordPress Page
-on:
-  workflow_dispatch:
-    inputs:
-      page_title:
-        description: 'Page Title'
-        required: true
-      service:
-        description: 'Service Type'
-        required: true
-      city:
-        description: 'Target City'
-        required: true
-      industry:
-        description: 'Target Industry'
-        required: true
-      keywords:
-        description: 'Keywords'
-        required: false
-      publish_status:
-        description: 'Publish Status'
-        required: true
-        default: 'publish'
-jobs:
-  create-page:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate and publish
-        env:
-          GEMINI_API_KEY: \${{ secrets.GEMINI_API_KEY }}
-          WP_SITE_URL: \${{ secrets.WP_SITE_URL }}
-          WP_USERNAME: \${{ secrets.WP_USERNAME }}
-          WP_PASSWORD: \${{ secrets.WP_PASSWORD }}
-          PAGE_TITLE: \${{ github.event.inputs.page_title }}
-          SERVICE: \${{ github.event.inputs.service }}
-          CITY: \${{ github.event.inputs.city }}
-          INDUSTRY: \${{ github.event.inputs.industry }}
-          KEYWORDS: \${{ github.event.inputs.keywords }}
-          PUBLISH_STATUS: \${{ github.event.inputs.publish_status }}
-        run: |
-          cat << 'SCRIPT' > run.mjs
-          import fetch from 'node:http';
-          const f = (await import('node:https')).default;
-          
-          async function req(host, path, method, headers, body) {
-            return new Promise((res, rej) => {
-              const r = f.request({hostname: host, path, method, headers}, (resp) => {
-                let d = '';
-                resp.on('data', c => d += c);
-                resp.on('end', () => res({status: resp.statusCode, body: d}));
-              });
-              r.on('error', rej);
-              if (body) r.write(JSON.stringify(body));
-              r.end();
-            });
-          }
+const PROXY = 'https://corsproxy.io/?';
+const WP_URL = 'https://growthhappen.com';
 
-          const prompt = \`Write professional SEO-optimized HTML content for a digital marketing agency "Growth Happen". Page: \${process.env.PAGE_TITLE}. Service: \${process.env.SERVICE}. City: \${process.env.CITY}. Industry: \${process.env.INDUSTRY}. Keywords: \${process.env.KEYWORDS}. Write 600 words. Include H2 headings, paragraphs, bullet points. Return only HTML body content using h2,h3,p,ul,li tags.\`;
-
-          const geminiUrl = \`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=\${process.env.GEMINI_API_KEY}\`;
-          const geminiBody = JSON.stringify({contents:[{parts:[{text: prompt}]}]});
-          const geminiRes = await new Promise((resolve, reject) => {
-            const r = f.request(geminiUrl, {method:'POST', headers:{'content-type':'application/json'}}, (res) => {
-              let d=''; res.on('data',c=>d+=c); res.on('end',()=>resolve({status:res.statusCode,body:d}));
-            });
-            r.on('error',reject); r.write(geminiBody); r.end();
-          });
-          const aiData = JSON.parse(geminiRes.body);
-          if (!aiData.candidates) throw new Error('Gemini error: ' + geminiRes.body);
-          const html = aiData.candidates[0].content.parts[0].text;
-          const slug = process.env.PAGE_TITLE.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-          const creds = Buffer.from(process.env.WP_USERNAME + ':' + process.env.WP_PASSWORD).toString('base64');
-          const url = new URL(process.env.WP_SITE_URL);
-          
-          const wp = await req(url.hostname, '/wp-json/wp/v2/pages', 'POST', {
-            'content-type': 'application/json',
-            'authorization': 'Basic ' + creds,
-            'content-length': Buffer.byteLength(JSON.stringify({title: process.env.PAGE_TITLE, content: html, status: process.env.PUBLISH_STATUS, slug}))
-          }, {title: process.env.PAGE_TITLE, content: html, status: process.env.PUBLISH_STATUS, slug});
-          
-          const page = JSON.parse(wp.body);
-          console.log('SUCCESS! Page URL:', page.link);
-          SCRIPT
-          node run.mjs`;
-
-function switchTab(t) {
-  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-  document.querySelector(`[onclick="switchTab('${t}')"]`).classList.add('active');
-  document.getElementById('tab-' + t).classList.add('active');
-  if (t === 'history') renderHistory();
+function saveKey() {
+  localStorage.setItem('wpgen_gemini', document.getElementById('geminiKey').value);
+  localStorage.setItem('wpgen_user', document.getElementById('wpUser').value);
+  localStorage.setItem('wpgen_pass', document.getElementById('wpPass').value);
 }
 
-function save() {
-  const fields = ['ghUser','ghRepo','ghToken','wpUser','wpPass','wpUrl','anthKey'];
-  const data = {};
-  fields.forEach(f => { data[f] = document.getElementById(f).value; });
-  localStorage.setItem('wpgen_config', JSON.stringify(data));
+function loadSaved() {
+  const k = localStorage.getItem('wpgen_gemini');
+  const u = localStorage.getItem('wpgen_user');
+  const p = localStorage.getItem('wpgen_pass');
+  if(k) document.getElementById('geminiKey').value = k;
+  if(u) document.getElementById('wpUser').value = u;
+  if(p) document.getElementById('wpPass').value = p;
+  renderHistory();
 }
 
-function load() {
-  try {
-    const data = JSON.parse(localStorage.getItem('wpgen_config') || '{}');
-    Object.keys(data).forEach(k => {
-      const el = document.getElementById(k);
-      if (el && data[k]) el.value = data[k];
-    });
-  } catch(e) {}
+function setStatus(type, msg) {
+  const el = document.getElementById('statusBox');
+  el.className = 'status ' + type;
+  el.innerHTML = msg;
 }
 
-function getConfig() {
-  return {
-    ghUser: document.getElementById('ghUser').value.trim(),
-    ghRepo: document.getElementById('ghRepo').value.trim(),
-    ghToken: document.getElementById('ghToken').value.trim(),
-    wpUser: document.getElementById('wpUser').value.trim(),
-    wpPass: document.getElementById('wpPass').value.trim(),
-    wpUrl: document.getElementById('wpUrl').value.trim(),
-    anthKey: document.getElementById('anthKey').value.trim(),
-  };
-}
-
-async function ghApi(path, method, body, token, user, repo) {
-  const res = await fetch(`https://api.github.com/repos/${user}/${repo}${path}`, {
-    method,
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/vnd.github+json',
-      'Content-Type': 'application/json'
-    },
-    body: body ? JSON.stringify(body) : undefined
-  });
-  const text = await res.text();
-  return { status: res.status, data: text ? JSON.parse(text) : {} };
-}
-
-async function setupRepo() {
-  const c = getConfig();
-  const status = document.getElementById('setup-status');
-
-  if (!c.ghUser || !c.ghRepo || !c.ghToken) {
-    status.className = 'status error';
-    status.textContent = 'Please fill in GitHub username, repo name and token.';
-    return;
-  }
-
-  status.className = 'status info';
-  status.textContent = 'Step 1/4: Creating workflow file in GitHub...';
-
-  try {
-    const wfContent = btoa(unescape(encodeURIComponent(WORKFLOW_CONTENT)));
-    let sha = undefined;
-
-    const existing = await ghApi('/.github/workflows/create-page.yml', 'GET', null, c.ghToken, c.ghUser, c.ghRepo);
-    if (existing.status === 200) sha = existing.data.sha;
-
-    const wfRes = await ghApi('/.github/workflows/create-page.yml', 'PUT', {
-      message: 'Add WP page generator workflow',
-      content: wfContent,
-      ...(sha ? {sha} : {})
-    }, c.ghToken, c.ghUser, c.ghRepo);
-
-    if (wfRes.status !== 200 && wfRes.status !== 201) throw new Error(wfRes.data.message || 'Failed to create workflow file');
-
-    status.textContent = 'Step 2/4: Adding WordPress secrets...';
-
-    async function addSecret(name, value) {
-      const keyRes = await fetch(`https://api.github.com/repos/${c.ghUser}/${c.ghRepo}/actions/secrets/public-key`, {
-        headers: { 'Authorization': `Bearer ${c.ghToken}`, 'Accept': 'application/vnd.github+json' }
-      });
-      const keyData = await keyRes.json();
-      const encryptedValue = await encryptSecret(value, keyData.key);
-      await ghApi(`/actions/secrets/${name}`, 'PUT', {
-        encrypted_value: encryptedValue,
-        key_id: keyData.key_id
-      }, c.ghToken, c.ghUser, c.ghRepo);
-    }
-
-    if (c.wpUrl) await addSecret('WP_SITE_URL', c.wpUrl);
-    if (c.wpUser) await addSecret('WP_USERNAME', c.wpUser);
-    if (c.wpPass) await addSecret('WP_PASSWORD', c.wpPass);
-    if (c.anthKey) await addSecret('GEMINI_API_KEY', c.anthKey);
-
-    status.className = 'status success';
-    status.innerHTML = `Setup complete! <br><br>
-    Next: Enable GitHub Pages → go to <a href="https://github.com/${c.ghUser}/${c.ghRepo}/settings/pages" target="_blank">github.com/${c.ghUser}/${c.ghRepo}/settings/pages</a> → Source: main branch → Save.<br><br>
-    Then go to the <strong>Create page</strong> tab and start generating pages!`;
-
-  } catch(err) {
-    status.className = 'status error';
-    status.textContent = 'Error: ' + err.message + '. Make sure your token has repo + workflow permissions.';
-  }
-}
-
-async function encryptSecret(secret, publicKey) {
-  const encoder = new TextEncoder();
-  const keyData = Uint8Array.from(atob(publicKey), c => c.charCodeAt(0));
-  const secretData = encoder.encode(secret);
-  const importedKey = await crypto.subtle.importKey('raw', keyData, {name:'X25519'}, false, []);
-  const ephemeral = await crypto.subtle.generateKey({name:'X25519'}, true, ['deriveKey','deriveBits']);
-  const sharedBits = await crypto.subtle.deriveBits({name:'X25519', public: importedKey}, ephemeral.privateKey, 256);
-  const sharedKey = await crypto.subtle.importKey('raw', sharedBits, {name:'AES-GCM'}, false, ['encrypt']);
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const encrypted = await crypto.subtle.encrypt({name:'AES-GCM', iv}, sharedKey, secretData);
-  const pubKeyRaw = await crypto.subtle.exportKey('raw', ephemeral.publicKey);
-  const combined = new Uint8Array(pubKeyRaw.byteLength + iv.byteLength + encrypted.byteLength);
-  combined.set(new Uint8Array(pubKeyRaw));
-  combined.set(iv, pubKeyRaw.byteLength);
-  combined.set(new Uint8Array(encrypted), pubKeyRaw.byteLength + iv.byteLength);
-  return btoa(String.fromCharCode(...combined));
-}
-
-async function createPage() {
-  const c = getConfig();
-  const btn = document.getElementById('createBtn');
-  const status = document.getElementById('create-status');
-
+async function generate() {
+  const geminiKey = document.getElementById('geminiKey').value.trim();
+  const wpUser = document.getElementById('wpUser').value.trim();
+  const wpPass = document.getElementById('wpPass').value.trim();
   const pageTitle = document.getElementById('pageTitle').value.trim();
   const service = document.getElementById('service').value;
   const city = document.getElementById('city').value.trim();
   const industry = document.getElementById('industry').value.trim();
   const keywords = document.getElementById('keywords').value.trim();
-  const publishStatus = document.getElementById('publishStatus').value;
+  const pubStatus = document.getElementById('pubStatus').value;
 
-  if (!pageTitle || !city || !industry) {
-    status.className = 'status error';
-    status.textContent = 'Please fill in page title, city, and industry.';
-    return;
-  }
-  if (!c.ghUser || !c.ghRepo || !c.ghToken) {
-    status.className = 'status error';
-    status.textContent = 'Please complete Setup first.';
-    return;
-  }
+  if (!geminiKey) { setStatus('error', 'Please enter your Gemini API key.'); return; }
+  if (!wpPass) { setStatus('error', 'Please enter your WordPress password.'); return; }
+  if (!pageTitle || !city || !industry) { setStatus('error', 'Please fill in page title, city and industry.'); return; }
 
+  const btn = document.getElementById('genBtn');
   btn.disabled = true;
-  status.className = 'status info';
-  status.textContent = 'Triggering GitHub Actions workflow...';
+  document.getElementById('previewBox').style.display = 'none';
 
   try {
-    const res = await fetch(`https://api.github.com/repos/${c.ghUser}/${c.ghRepo}/actions/workflows/create-page.yml/dispatches`, {
+    setStatus('info', '&#9889; Step 1/3 &mdash; Generating SEO content with Gemini AI...');
+
+    const prompt = `Write a professional SEO-optimized page for a digital marketing agency called "Growth Happen" (growthhappen.com).
+Page Title: ${pageTitle}
+Service: ${service}
+City: ${city}
+Industry: ${industry}
+Keywords: ${keywords || service + ', digital marketing, ' + city}
+
+Write 600-700 words. Include:
+- Compelling intro paragraph about ${service} for ${industry} in ${city}
+- Why businesses in ${city} need ${service} (2 paragraphs)  
+- What we offer (5 bullet points)
+- 3 key benefits
+- Strong call to action mentioning "Contact Growth Happen today"
+
+Return ONLY clean HTML using h2, h3, p, ul, li tags. No html/head/body tags.`;
+
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+      {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({contents: [{parts: [{text: prompt}]}]})
+      }
+    );
+    const geminiData = await geminiRes.json();
+    if (!geminiData.candidates) throw new Error('Gemini error: ' + (geminiData.error?.message || 'Invalid API key or quota exceeded'));
+
+    const htmlContent = geminiData.candidates[0].content.parts[0].text.replace(/```html|```/g, '').trim();
+
+    const preview = document.getElementById('previewBox');
+    preview.innerHTML = '<strong style="font-size:12px;color:#6b7280">CONTENT PREVIEW:</strong><br><br>' + htmlContent.substring(0, 400) + '...';
+    preview.style.display = 'block';
+
+    setStatus('info', '&#9889; Step 2/3 &mdash; Connecting to WordPress...');
+
+    const slug = pageTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const creds = btoa(wpUser + ':' + wpPass);
+
+    const wpRes = await fetch(PROXY + encodeURIComponent(WP_URL + '/wp-json/wp/v2/pages'), {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${c.ghToken}`,
-        'Accept': 'application/vnd.github+json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + creds,
+        'X-Requested-With': 'XMLHttpRequest'
       },
-      body: JSON.stringify({
-        ref: 'main',
-        inputs: { page_title: pageTitle, service, city, industry, keywords, publish_status: publishStatus }
-      })
+      body: JSON.stringify({title: pageTitle, content: htmlContent, status: pubStatus, slug})
     });
 
-    if (res.status === 204) {
-      status.className = 'status success';
-      status.innerHTML = `Workflow triggered! Your page will be live in ~60 seconds.<br>
-      Watch it run: <a href="https://github.com/${c.ghUser}/${c.ghRepo}/actions" target="_blank">github.com/${c.ghUser}/${c.ghRepo}/actions</a>`;
-
-      const history = JSON.parse(localStorage.getItem('wpgen_history') || '[]');
-      history.unshift({ title: pageTitle, service, city, time: new Date().toLocaleString() });
-      localStorage.setItem('wpgen_history', JSON.stringify(history.slice(0, 20)));
-
-      document.getElementById('pageTitle').value = '';
-      document.getElementById('city').value = '';
-      document.getElementById('industry').value = '';
-      document.getElementById('keywords').value = '';
-    } else {
-      const err = await res.json();
-      throw new Error(err.message || `Error ${res.status}`);
+    if (!wpRes.ok) {
+      const err = await wpRes.json();
+      throw new Error('WordPress error: ' + (err.message || wpRes.status));
     }
+
+    const page = await wpRes.json();
+    setStatus('success', `&#10003; Page published! <a href="${page.link}" target="_blank" style="color:#166534;font-weight:700">${page.link}</a>`);
+
+    const history = JSON.parse(localStorage.getItem('wpgen_history') || '[]');
+    history.unshift({title: pageTitle, url: page.link, city, service, time: new Date().toLocaleString()});
+    localStorage.setItem('wpgen_history', JSON.stringify(history.slice(0, 30)));
+    renderHistory();
+
+    document.getElementById('pageTitle').value = '';
+    document.getElementById('city').value = '';
+    document.getElementById('industry').value = '';
+    document.getElementById('keywords').value = '';
+
   } catch(err) {
-    status.className = 'status error';
-    status.textContent = 'Error: ' + err.message;
+    setStatus('error', 'Error: ' + err.message);
   } finally {
     btn.disabled = false;
   }
@@ -433,23 +242,22 @@ async function createPage() {
 
 function renderHistory() {
   const history = JSON.parse(localStorage.getItem('wpgen_history') || '[]');
-  const el = document.getElementById('historyList');
-  if (!history.length) {
-    el.innerHTML = '<p style="font-size:14px;color:#9ca3af">No pages created yet.</p>';
-    return;
-  }
-  el.innerHTML = history.map(h => `
+  const card = document.getElementById('historyCard');
+  const list = document.getElementById('historyList');
+  if (!history.length) { card.style.display = 'none'; return; }
+  card.style.display = 'block';
+  list.innerHTML = history.map(h => `
     <div class="history-item">
       <div>
-        <div style="font-weight:500;font-size:13px">${h.title}</div>
-        <div style="font-size:12px;color:#9ca3af">${h.service} — ${h.city}</div>
+        <div style="font-weight:600">${h.title}</div>
+        <div class="ts">${h.service} &mdash; ${h.city} &mdash; ${h.time}</div>
       </div>
-      <span class="ts">${h.time}</span>
+      <a href="${h.url}" target="_blank">View page</a>
     </div>
   `).join('');
 }
 
-load();
+loadSaved();
 </script>
 </body>
 </html>
