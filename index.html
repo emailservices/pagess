@@ -87,10 +87,10 @@ input:focus,select:focus{border-color:#1a56db;box-shadow:0 0 0 3px rgba(26,86,21
     </div>
 
     <div class="card">
-      <div class="card-title">Step 3 — Anthropic API key</div>
-      <label>Anthropic API Key</label>
-      <input type="password" id="anthKey" placeholder="sk-ant-xxxxxxxxxxxxxxxxxxxx" oninput="save()"/>
-      <p class="note">Get free at: <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys → Create Key</p>
+      <div class="card-title">Step 3 — Gemini API key (Free)</div>
+      <label>Gemini API Key</label>
+      <input type="password" id="anthKey" placeholder="AIzaSy-xxxxxxxxxxxxxxxxxxxx" oninput="save()"/>
+      <p class="note">Get free at: <a href="https://aistudio.google.com" target="_blank">aistudio.google.com</a> → Sign in with Google → Get API Key → Create API Key</p>
     </div>
 
     <button class="btn" onclick="setupRepo()">Setup repository automatically</button>
@@ -182,7 +182,7 @@ jobs:
     steps:
       - name: Generate and publish
         env:
-          ANTHROPIC_API_KEY: \${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: \${{ secrets.GEMINI_API_KEY }}
           WP_SITE_URL: \${{ secrets.WP_SITE_URL }}
           WP_USERNAME: \${{ secrets.WP_USERNAME }}
           WP_PASSWORD: \${{ secrets.WP_PASSWORD }}
@@ -212,14 +212,17 @@ jobs:
 
           const prompt = \`Write professional SEO-optimized HTML content for a digital marketing agency "Growth Happen". Page: \${process.env.PAGE_TITLE}. Service: \${process.env.SERVICE}. City: \${process.env.CITY}. Industry: \${process.env.INDUSTRY}. Keywords: \${process.env.KEYWORDS}. Write 600 words. Include H2 headings, paragraphs, bullet points. Return only HTML body content using h2,h3,p,ul,li tags.\`;
 
-          const ai = await req('api.anthropic.com', '/v1/messages', 'POST', {
-            'content-type': 'application/json',
-            'x-api-key': process.env.ANTHROPIC_API_KEY,
-            'anthropic-version': '2023-06-01'
-          }, { model: 'claude-sonnet-4-20250514', max_tokens: 1500, messages: [{role:'user', content: prompt}] });
-          
-          const aiData = JSON.parse(ai.body);
-          const html = aiData.content[0].text;
+          const geminiUrl = \`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=\${process.env.GEMINI_API_KEY}\`;
+          const geminiBody = JSON.stringify({contents:[{parts:[{text: prompt}]}]});
+          const geminiRes = await new Promise((resolve, reject) => {
+            const r = f.request(geminiUrl, {method:'POST', headers:{'content-type':'application/json'}}, (res) => {
+              let d=''; res.on('data',c=>d+=c); res.on('end',()=>resolve({status:res.statusCode,body:d}));
+            });
+            r.on('error',reject); r.write(geminiBody); r.end();
+          });
+          const aiData = JSON.parse(geminiRes.body);
+          if (!aiData.candidates) throw new Error('Gemini error: ' + geminiRes.body);
+          const html = aiData.candidates[0].content.parts[0].text;
           const slug = process.env.PAGE_TITLE.toLowerCase().replace(/[^a-z0-9]+/g,'-');
           const creds = Buffer.from(process.env.WP_USERNAME + ':' + process.env.WP_PASSWORD).toString('base64');
           const url = new URL(process.env.WP_SITE_URL);
@@ -331,7 +334,7 @@ async function setupRepo() {
     if (c.wpUrl) await addSecret('WP_SITE_URL', c.wpUrl);
     if (c.wpUser) await addSecret('WP_USERNAME', c.wpUser);
     if (c.wpPass) await addSecret('WP_PASSWORD', c.wpPass);
-    if (c.anthKey) await addSecret('ANTHROPIC_API_KEY', c.anthKey);
+    if (c.anthKey) await addSecret('GEMINI_API_KEY', c.anthKey);
 
     status.className = 'status success';
     status.innerHTML = `Setup complete! <br><br>
